@@ -15,15 +15,17 @@ const refreshRoute = require('./routes/refresh');
 const logoutRoute = require('./routes/logout');
 const adminRoute = require('./routes/admin');
 
+const corsOrigin = [
+    'http://localhost:3000',
+    'https://fe-one-source-v3.herokuapp.com',
+    'https://one-source-integration-app.herokuapp.com'
+];
+
 const app = express();
 
 app.use(cors({ 
     credentials: true, 
-    origin: [
-        'http://localhost:3000',
-        'https://fe-one-source-v3.herokuapp.com',
-        'https://one-source-integration-app.herokuapp.com'
-    ]
+    origin: corsOrigin
 }));
 app.use(express.json());
 app.use(cookieparser());
@@ -39,3 +41,4 @@ app.use('/api/v0/logout', logoutRoute);
 app.use('/api/v0/admin', adminRoute);
 
 module.exports = app;
+module.exports.corsOrigin = corsOrigin;

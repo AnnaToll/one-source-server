@@ -1,8 +1,10 @@
 const routes = require('express').Router({});
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { verifyToken } = require('../jwt');
+const { activateChat, closeChat, setKey } = require('../socket');
 
-routes.get('/delete-cookies', (req, res) => {
+routes.get('/delete-cookies', verifyToken, (req, res) => {
     if (req.cookies?.jwt) {
         for (let cookie of Object.keys(req.cookies)) {
             res.clearCookie(cookie);
@@ -11,20 +13,9 @@ routes.get('/delete-cookies', (req, res) => {
     res.send();
 });
 
-routes.patch('/add-access', async(req, res) => {
-    console.log('in add access');
-    const accessToken = req.headers.authorization.replace('Bearer ', '');
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            res.status(406);
-            return res.send({ error: 'You are not authorized to make this change' });
-        } 
-    });    
+routes.patch('/add-access', verifyToken, async (req, res) => {
+    console.log('in add access');   
     const accessLevel = req.body.accessLevel;
-    if (accessLevel !== 'admin' && accessLevel !== 'developer' && accessLevel !== 'support') {
-        res.status(401);
-        return res.send({ error: 'Access type not valid' });
-    }
     let newAccessArr = [];
     try {
         const doc = await User.find({email: req.body.email});
@@ -55,19 +46,9 @@ routes.patch('/add-access', async(req, res) => {
 
 });
 
-routes.patch('/remove-access', async(req, res) => {
+routes.patch('/remove-access', verifyToken, async (req, res) => {
     console.log('in remove access');
-    const accessToken = req.headers.authorization.replace('Bearer ', '');
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            res.status(406);
-            return res.send({ error: 'You are not authorized to make this change' });
-        } 
-    });    
     const accessLevel = req.body.accessLevel;
-    if (accessLevel !== 'admin' && accessLevel !== 'developer' && accessLevel !== 'support') {
-        return res.status(401).send({ error: 'Access type not valid' });
-    }
     let newAccessArr = [];
     try {
         const doc = await User.find({email: req.body.email});
@@ -92,6 +73,17 @@ routes.patch('/remove-access', async(req, res) => {
     res.status(200);
     res.send({success: 'Access level successfully removed' });
 
+});
+
+routes.get('/activate-chat', verifyToken, (req, res) => {
+    const key = Math.floor(Math.random() * 10000000000);
+    setKey(key);
+    res.status(200).send({ key: key });
+});
+
+routes.get('/close-chat', verifyToken, (req, res) => {
+    // closeChat();
+    res.status(200).send();
 });
 
 module.exports = routes;

@@ -19,6 +19,18 @@ const checkCookie = (req, res, next) => {
     next();
 };
 
+const verifyToken = (req, res, next) => {
+    console.log('In verify token');
+    const accessToken = req.headers.authorization.replace('Bearer ', '');
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(406).send({ error: 'You are not authorized to make this change' });
+        }
+        next();
+    });
+
+};
+
 
 const generateJwtToken = (user, type) => {
 
@@ -41,4 +53,4 @@ const cookieSettings = {
 // header:
 // Authorization: Bearer <token>
 
-module.exports = { authenticateToken, generateJwtToken, checkCookie, cookieSettings };
+module.exports = { verifyToken, generateJwtToken, checkCookie, cookieSettings };

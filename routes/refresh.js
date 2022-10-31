@@ -19,7 +19,6 @@ routes.get('/', (req, res) => {
                     accessLevel: decoded.accessLevel
                 };
                 const accessToken = generateJwtToken(tokenPayload, 'access');
-                console.log(accessToken);
                 res.status(200);
                 res.send({ accessToken: accessToken });
             }
