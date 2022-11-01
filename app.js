@@ -17,8 +17,7 @@ const adminRoute = require('./routes/admin');
 
 const corsOrigin = [
     'http://localhost:3000',
-    'https://fe-one-source-v3.herokuapp.com',
-    'https://one-source-integration-app.herokuapp.com'
+    'https://one-source-app.herokuapp.com'
 ];
 
 const app = express();

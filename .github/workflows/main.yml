@@ -32,8 +32,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "one-source-server" #Must be unique in Heroku
           heroku_email: "anna.toll@protonmail.com"
-      - uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: .
         
         
