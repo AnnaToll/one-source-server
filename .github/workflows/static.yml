@@ -26,6 +26,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
       dbURI: ${{secrets.DBURI}}
       ACCESS_TOKEN_SECRET: ${{secrets.ACCESS_TOKEN_SECRET}}
       REFRESH_TOKEN_SECRET: ${{secrets.REFRESH_TOKEN_SECRET}}
